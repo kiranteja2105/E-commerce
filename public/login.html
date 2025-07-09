@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="public/style.css">
+    <script>
+        function showAlert(message) {
+            alert(message);
+        }
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form action="/login" method="post">
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <input type="submit" value="Login">
+        </form>
+        <a href="/signup.html" class="signup-button">Sign Up</a>
+    </div>
+</body>
+</html>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-image: url('https://images.pexels.com/photos/1406282/pexels-photo-1406282.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=');
+        background-size: cover;
+        background-position: center;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .login-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    h2 {
+        margin-bottom: 20px;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="submit"],
+    .signup-button {
+        width: calc(100% - 22px);
+        margin: 10px 0;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        text-decoration: none;
+        display: inline-block;
+    }
+    input[type="text"],
+    input[type="password"] {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+    input[type="submit"],
+    .signup-button {
+        background-color: #007bff;
+        color: #fff;
+    }
+    input[type="submit"]:hover,
+    .signup-button:hover {
+        background-color: #0056b3;
+    }
+</style>

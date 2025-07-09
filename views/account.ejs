@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Account</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Your Account</h1>
+    <h2>Welcome, <%= userDetails.name %></h2>
+    <h3>Your Orders:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orders.forEach(order => { %>
+                <% order.products.forEach(item => { %>
+                    <tr>
+                        <td><%= item.pid.name %></td>
+                        <td>₹<%= item.pid.price %></td>
+                        <td><%= item.count %></td>
+                        <td>₹<%= item.pid.price * item.count %></td>
+                        <td><%= order.date.toLocaleDateString() %></td>
+                    </tr>
+                <% }) %>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

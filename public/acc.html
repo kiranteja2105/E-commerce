@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Account</title>
+</head>
+<header>
+    <div class="header-left">
+        <h1>Cart</h1>
+    </div>
+    <div class="header-right">
+        <button onclick="location.href='home.html'">Home</button>
+        <button onclick="location.href='cart.html'">Cart</button>
+        <button onclick="location.href='acc.html'">Account</button>
+    </div>
+</header>
+<body>
+    <div class="container">
+        <h1>User Account</h1>
+        <div class="user-info">
+            <p><strong>Username:</strong> <span id="username"></span></p>
+            <p><strong>Email:</strong> <span id="email"></span></p>
+            <p><strong>Phone:</strong> <span id="phone"></span></p>
+            <p><strong>Address:</strong> <span id="address"></span></p>
+        </div>
+
+        <h2>Order History</h2>
+        <div id="orders-container">
+            <!-- Each order will have its own table -->
+        </div>
+    </div>
+
+    <script>
+        async function fetchUserData() {
+            // Fetch user data and order history
+            const response = await fetch('/api/user-account');
+            const data = await response.json();
+
+            if (response.ok) {
+                document.getElementById('username').textContent = data.username;
+                document.getElementById('email').textContent = data.email;
+                document.getElementById('phone').textContent = data.phone;
+                document.getElementById('address').textContent = data.address;
+
+                // Populate order history
+                const ordersContainer = document.getElementById('orders-container');
+                data.orders.forEach(order => {
+                    const orderDiv = document.createElement('div');
+                    orderDiv.innerHTML = `
+                        <h3>Order ID: ${order.orderId}</h3>
+                        <p><strong>Order Date:</strong> ${new Date(order.orderDate).toLocaleDateString()}</p>
+                        <p><strong>Status:</strong> ${order.status}</p>
+                        <p><strong>Total Price:</strong> ₹${order.totalPrice}</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${order.products.map(product => `
+                                    <tr>
+                                        <td>${product.name}</td>
+                                        <td>${product.count}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    ordersContainer.appendChild(orderDiv);
+                });
+            } else {
+                alert('Error fetching user data: ' + data.message);
+            }
+        }
+
+        // Fetch user data on page load
+        window.onload = fetchUserData;
+    </script>
+</body>
+</html>
+
+
+  <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url('https://images.unsplash.com/photo-1607128849509-bdccb1b58d09?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Other styles remain the same */
+        /* ... */
+
+        /* Add style for the order form */
+        .form-container {
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed position */
+            top: 0; /* Sit on top */
+            left: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+            z-index: 999; /* Sit on top */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .order-form {
+            background-color: white; /* White background */
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .note {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    
+    /* Add your CSS styles here */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-image: url('https://img.pikbest.com/wp/202408/shopping-cart-interface-e-commerce-and-online-concept-abstract-glowing-on-blue-background-3d-render_9779173.jpg!w700wp');
+        background-size: cover;
+        background-position: center;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: #4C4B4A;
+        padding: 10px 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-left h1 {
+        margin: 0;
+        font-size: 24px;
+        color: #33ADE4;
+    }
+
+    .header-right button {
+        padding: 10px;
+        margin-left: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .header-right button:hover {
+        background-color: #0056b3;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        color: #333;
+    }
+
+    th {
+        background-color: #E5E8E8;
+    }
+
+    tr:nth-child(even) {
+        background-color: #E5E8E8;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #FFF;
+    }
+
+    .remove-btn {
+        background-color: #ff6666;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    .remove-btn:hover {
+        background-color: #ff3333;
+    }
+
+    .total-row {
+        font-weight: bold;
+        background-color: #E5E8E8; /* Background color for total row */
+    }
+
+
+    body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url('https://images.unsplash.com/photo-1607128849509-bdccb1b58d09?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+        }
+
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+form {
+    display: grid;
+    grid-gap: 10px;
+    background-color: rgba(255, 255, 255, 0.9); /* Adjust opacity here */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .readonly {
+            background-color: #f5f5f5;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button[type="submit"] {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+ 
+
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    h1, h2, h3 {
+        text-align: center;
+        color: #333;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .user-info {
+        margin-bottom: 20px;
+    }
+
+    #orders-container > div {
+        margin-bottom: 30px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        background-image: url('https://images.unsplash.com/photo-1607128849509-bdccb1b58d09?q=80&w=1887&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+    }
+    header {
+        display: flex;
+        justify-content: space-between;
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+    }
+    .header-buttons button {
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+    .header-buttons button a {
+        color: white;
+        text-decoration: none;
+    }
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        width: 80%;
+        max-width: 1200px;
+        margin: 100px auto 0;
+    }
+    .grid-item {
+        text-align: center;
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .grid-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+</style>

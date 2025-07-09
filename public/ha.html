@@ -1,0 +1,188 @@
+x
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url('https://images.unsplash.com/photo-1607128849509-bdccb1b58d09?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #4C4B4A;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #33ADE4;
+        }
+
+        .header-right button {
+            padding: 10px;
+            margin-left: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .header-right button:hover {
+            background-color: #0056b3;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: space-around;
+        }
+
+        .product {
+            border: 1px solid #ccc;
+            padding: 20px;
+            width: calc(25% - 30px);
+            text-align: center;
+            background-color: grey;
+            position: relative;
+            border-radius: 15px;
+        }
+
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .popup-container {
+            position: absolute;
+            display: none;
+            width: 200px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            z-index: 1;
+        }
+
+        .popup-container img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>DeviceDen</title>
+  
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <h1>DeviceDen</h1>
+        </div>
+        <div class="header-right">
+            <button onclick="location.href='home.html'">Home</button>
+            <button onclick="location.href='cart.html'">Cart</button>
+            <button onclick="location.href='acc.html'">Account</button>
+            <button onclick="location.href='contact.html'">Contact Us</button>
+        </div>
+    </header>
+
+    <div class="products" id="products"></div>
+
+    <script>
+        async function fetchProducts() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const category = urlParams.get('cat');
+
+            try {
+                const response = await fetch(`/api/products?cat=${category}`);
+                const products = await response.json();
+                const productsContainer = document.getElementById('products');
+                productsContainer.innerHTML = '';
+
+                products.forEach(product => {
+                    const productDiv = document.createElement('div');
+                    productDiv.classList.add('product');
+
+                    productDiv.innerHTML = `
+                        <div class="popup-container" id="popup${product._id}">
+                            <img src="${product.image_url}" alt="${product.name}">
+                        </div>
+                        <h2>${product.name}</h2>
+                        <img src="${product.image_url}" alt="${product.name}" onmouseover="showPopup('popup${product._id}')" onmouseout="hidePopup('popup${product._id}')">
+                        <p>Description: ${product.description}</p>
+                        <p>Price: ₹${product.price}</p>
+                        ${product.count > 0 ? `
+                            <button class="add-to-cart" data-product-id="${product._id}">Add to Cart</button>
+                        ` : '<p style="color: red;">Out of Stock</p>'}
+                    `;
+                    productsContainer.appendChild(productDiv);
+                });
+
+                document.querySelectorAll('.add-to-cart').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const productId = button.getAttribute('data-product-id');
+                        const username = sessionStorage.getItem('username');
+
+                        try {
+                            const response = await fetch('/api/add-to-cart', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ username, productId }),
+                            });
+
+                            const result = await response.json();
+                            if (response.ok) {
+                                alert(result.message);
+                                window.location.href = `ha.html?cat=${category}`;
+                            } else {
+                                alert(result.message);
+                            }
+                        } catch (error) {
+                            console.error("Error adding to cart:", error);
+                            alert("An error occurred while adding the product to the cart.");
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+
+        function showPopup(popupId) {
+            const popup = document.getElementById(popupId);
+            popup.style.display = "block";
+        }
+
+        function hidePopup(popupId) {
+            const popup = document.getElementById(popupId);
+            popup.style.display = "none";
+        }
+
+        window.onload = fetchProducts; // Fetch products on page load
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeviceDen Cart</title>
+    <script src="cart.js" defer></script>
+    
+</head>
+<body>
+<header>
+    <div class="header-left">
+        <h1>Cart</h1>
+    </div>
+    <div class="header-right">
+        <button onclick="location.href='home.html'">Home</button>
+        <button onclick="location.href='cart.html'">Cart</button>
+        <button onclick="location.href='acc.html'">Account</button>
+        <button onclick="location.href='contact.html'">Contact Us</button>
+    </div>
+</header>
+
+<h1>Your Cart</h1>
+<table id="cart-table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    <!-- Cart items will be injected here -->
+    </tbody>
+</table>
+<div id="total-price"></div>
+<button onclick="showOrderForm()">Buy Now</button>
+
+<!-- Order Form -->
+<div class="form-container" id="orderFormContainer">
+    <div class="order-form">
+        <h1>Order Form</h1>
+        <form action="/submit-order" method="POST" onsubmit="return confirmOrder()">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
+
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" placeholder="Enter your address" required>
+
+            <label for="totalPrice">Total Price:</label>
+            <input type="text" id="totalPrice" name="totalPrice" value="" readonly>
+
+            <label for="payment">Payment:</label>
+            <input type="text" id="payment" name="payment" class="readonly" value="C.O.D" readonly>
+
+            <button type="submit">Confirm Order</button>
+        </form>
+        <div class="note">Note: Once confirmed, the order cannot be cancelled.</div>
+        <button onclick="hideOrderForm()">Cancel</button>
+    </div>
+</div>
+
+
+<script>
+    function checkCartBeforeBuying() {
+    const cartTable = document.getElementById('cart-table').getElementsByTagName('tbody')[0];
+    if (cartTable.children.length === 0) { // Check if the tbody has any child elements
+        alert("Your cart is empty. Please add items before proceeding.");
+        return; // Prevent further action
+    }
+    showOrderForm(); // Show the order form if there are items
+}
+
+    
+    function showOrderForm() {
+        // Get the total price from the cart
+        const totalPrice = document.getElementById('total-price').innerText.match(/₹(\d+)/)[1]; // Extract the numeric value
+        document.getElementById('totalPrice').value = totalPrice; // Set the total price in the form
+        document.getElementById('orderFormContainer').style.display = 'block'; // Show the form
+    }
+
+    function hideOrderForm() {
+        document.getElementById('orderFormContainer').style.display = 'none'; // Hide the form
+    }
+
+    function confirmOrder() {
+        alert("Order confirmed");
+        return true; // Allow form submission
+    }
+</script>
+
+</body>
+</html>
+
+
+
+<style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url('https://images.unsplash.com/photo-1607128849509-bdccb1b58d09?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Other styles remain the same */
+        /* ... */
+
+        /* Add style for the order form */
+        .form-container {
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed position */
+            top: 0; /* Sit on top */
+            left: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+            z-index: 999; /* Sit on top */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .order-form {
+            background-color: white; /* White background */
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .note {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    
+    /* Add your CSS styles here */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-image: url('https://img.pikbest.com/wp/202408/shopping-cart-interface-e-commerce-and-online-concept-abstract-glowing-on-blue-background-3d-render_9779173.jpg!w700wp');
+        background-size: cover;
+        background-position: center;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: #4C4B4A;
+        padding: 10px 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-left h1 {
+        margin: 0;
+        font-size: 24px;
+        color: #33ADE4;
+    }
+
+    .header-right button {
+        padding: 10px;
+        margin-left: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .header-right button:hover {
+        background-color: #0056b3;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        color: #333;
+    }
+
+    th {
+        background-color: #E5E8E8;
+    }
+
+    tr:nth-child(even) {
+        background-color: #E5E8E8;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #FFF;
+    }
+
+    .remove-btn {
+        background-color: #ff6666;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    .remove-btn:hover {
+        background-color: #ff3333;
+    }
+
+    .total-row {
+        font-weight: bold;
+        background-color: #E5E8E8; /* Background color for total row */
+    }
+
+
+    body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url('https://images.unsplash.com/photo-1607128849509-bdccb1b58d09?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center;
+        }
+
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+form {
+    display: grid;
+    grid-gap: 10px;
+    background-color: rgba(255, 255, 255, 0.9); /* Adjust opacity here */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .readonly {
+            background-color: #f5f5f5;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button[type="submit"] {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+  </style>
